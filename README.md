@@ -2,7 +2,7 @@
 Simple implementation of Least Significant Bit Matching Image Steganography
 
 ### Requirements
-- Windows 10 x64
+- Windows(tested on Windows10 x64)
 - Python 3
 - Pillow
 - Numpy
