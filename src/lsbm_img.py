@@ -7,7 +7,7 @@ def load_image(img):
     arr = np.array(img)
     return arr.shape, arr.flatten()
 
-def convert_digit_in_num(num):
+def convert_digit_to_bits(num):
     converted_num = ''
     for digit in str(num):
         converted_num += format(int(digit), '04b')
@@ -20,9 +20,9 @@ def convert_image(img_to_embed):
         bits_to_embed = format(0, '04b')
     else:
         bits_to_embed = format(3, '04b')
-    bits_to_embed += convert_digit_in_num(img_shape[0])
+    bits_to_embed += convert_digit_to_bits(img_shape[0])
     bits_to_embed += format(10, '04b')
-    bits_to_embed += convert_digit_in_num(img_shape[1])
+    bits_to_embed += convert_digit_to_bits(img_shape[1])
     bits_to_embed += format(12, '04b')
     #print("Details len: {}".format(len(bits_to_embed)))
     # convert image pixels into 8 bits
@@ -32,9 +32,16 @@ def convert_image(img_to_embed):
     #print("Pixels len: {}".format(len(bits_to_embed)))
     return bits_to_embed
 
-def change_bit(img_pix, msg_bit):
-    new_pix = int(img_pix[:-1] + str(msg_bit), 2)
-    return new_pix
+def change_bit(img_pix, img_bit):
+    if (img_pix%2) != int(img_bit):
+        if img_pix == 255:
+            img_pix = 254
+        elif img_pix == 0:
+            img_pix = 1
+        else:
+            sign = [-1, 1]
+            img_pix += sign[randint(0,1)]
+    return img_pix
 
 def encode_img(img_to_embed, cover_img):
     binary_img = convert_image(img_to_embed)
@@ -42,8 +49,7 @@ def encode_img(img_to_embed, cover_img):
 
     sign = [-1, 1]
     for i in range(len(binary_img)):
-        if (img[i]%2) != int(binary_img[i]):
-            img[i] += sign[randint(0,1)]
+        img[i] = change_bit(img[i], binary_img[i])
     return Image.fromarray(np.reshape(img, shape))
 
 def convert_digit_to_num(digit_list):
