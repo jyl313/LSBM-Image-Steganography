@@ -86,8 +86,10 @@ def decode_img(stego_img):
         extract_num += str(img[i]%2)
     #print("Pixels len: {}".format(len(img_pixels)))
     if img_type:
-        return Image.fromarray(np.reshape(img_pixels, (img_row, img_col, img_type)))
-    return Image.fromarray(np.reshape(img_pixels, (img_row, img_col)))
+        img_arr = np.reshape(img_pixels, (img_row, img_col, img_type))
+    else:
+        img_arr = np.reshape(img_pixels, (img_row, img_col))
+    return Image.fromarray(img_arr.astype(dtype="uint8"))
 
 if __name__=="__main__":
     opt = input("1: Encode, 2: Decode\n")
